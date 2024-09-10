@@ -63,22 +63,17 @@ with form:
  
 with output:
     st.subheader('Output')
-    try:
-        image = st.image(FINALL_IMAGES_LIST[-1] , caption="cat.png")
-    except:
-        st.write("Try To Generate Something...")
-
-
-if submit_button:
-    on_submit(
-        pipe=pipe , 
-        lora_options=lora_combo , 
-        image_component=image , 
-        height=height_prompt , 
-        width=width_prompt , 
-        guidance_scale=gradience_prompt,
-        negative=negative_prompt,
-        prompt=positive_prompt,
-        steps=steps_prompt,
-        number=1,
-    )
+    image = st.image(FINALL_IMAGES_LIST[-1],caption="cat.png")
+    if submit_button:
+        on_submit(
+            pipe=pipe , 
+            lora_options=lora_combo , 
+            image_component=image , 
+            height=height_prompt , 
+            width=width_prompt , 
+            guidance_scale=gradience_prompt,
+            negative=negative_prompt,
+            prompt=positive_prompt,
+            steps=steps_prompt,
+            number=1,
+        )

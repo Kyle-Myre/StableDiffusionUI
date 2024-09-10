@@ -16,5 +16,3 @@ LORA_LIST = [lora for lora in os.listdir(LORA_PATH)]
 
 def get_lora(lora:str):
     return os.path.join(LORA_PATH , lora)
-
-print(IMAGES_PATH)

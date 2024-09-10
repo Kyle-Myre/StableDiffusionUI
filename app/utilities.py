@@ -7,7 +7,8 @@ import torch , os
 def generate_filename_random_string(length=12):
     letters = string.ascii_uppercase + string.digits
     random_string = ''.join(random.choice(letters) for _ in range(length))
-    final_filename = f"{random_string}-{datetime.now().strftime("%Y%m%d")}.png"
+    date = datetime.now().strftime("%Y%m%d")
+    final_filename = f"{random_string}-{date}.png"
     filename_path  = os.path.join(IMAGES_PATH , final_filename)
     return filename_path
 

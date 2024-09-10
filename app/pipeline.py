@@ -1,4 +1,6 @@
 from transformers.utils import move_cache
+import safetensors.torch
+
 move_cache()
 
 from diffusers import StableDiffusionXLPipeline , EulerAncestralDiscreteScheduler

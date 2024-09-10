@@ -39,10 +39,9 @@ def insert_record(positive_prompt:str , negative_prompt:str , steps:int , guidan
         database = load_session()
         cursor   = database.cursor()
         cursor.execute(
-            "INSERT INTO session(ID , Steps , Guidance , PositivePrompt , NegativePrompt) VALUES(?,?,?,?,?,?)" , 
+            "INSERT INTO session(ID , Steps , Guidance , PositivePrompt , NegativePrompt) VALUES(?,?,?,?,?)" , 
             [None , steps , guidance , positive_prompt , negative_prompt]
         )
         database.commit()
     except sqlite3.Error as error:
         console.print(error)
-

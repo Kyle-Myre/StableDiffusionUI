@@ -3,3 +3,4 @@ app/lora/*
 app/database/*
 __pycache__/
 .env
+.venv/

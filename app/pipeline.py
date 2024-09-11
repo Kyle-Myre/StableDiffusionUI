@@ -47,7 +47,7 @@ def configure_pipeline(repo_url , device='cuda', clip_skip=2):
 
     print('Selected Model')
 
-    return (tokenzier , pipe)
+    return pipe
 
 def reshape_lora_weights(lora_weights, expected_shape):
     reshaped_weights = {}

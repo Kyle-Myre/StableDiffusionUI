@@ -13,7 +13,7 @@ form , output = st.columns(2)
 
 @st.cache_resource
 def cache_pipeline(model_option:str):
-    return configure_pipeline(model_option)[1]
+    return configure_pipeline(model_option)
 
 
 
@@ -68,10 +68,12 @@ with output:
 if submit_button:
     with generating_status.status("Generating Image"):
         try:
+            
             on_submit(pipe=pipe,lora_options=lora_combo,image_component=image , 
                 height=height_prompt,width=width_prompt,guidance_scale=gradience_prompt,
                 negative=negative_prompt,prompt=positive_prompt,steps=steps_prompt,
             )
             task_status.success('Successfully Generated Task')
+
         except Exception as error:
             task_status.error(error)

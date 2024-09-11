@@ -1,10 +1,14 @@
 from transformers.utils import move_cache
+from transformers import BertModel
+
+
 import safetensors.torch
 
 move_cache()
 
 from diffusers import StableDiffusionXLPipeline , EulerAncestralDiscreteScheduler
 import torch
+
 
 def configure_gpu():
     """
@@ -19,14 +23,15 @@ def configure_pipeline(repo_url , device='cuda', clip_skip=2):
     Configure Pipeline and download a model from hugging face if one doesn't exists.
     """
     dtype = torch.float16
-    pipe = StableDiffusionXLPipeline.from_pretrained(
-        repo_url,
-        torch_dtype=dtype,
-        use_safetensors=True,
-        custom_pipeline="lpw_stable_diffusion_xl",
-        add_watermarker=False,
+
+    pipe = StableDiffusionXLPipeline.from_pretrained(repo_url , torch_dtype=dtype,use_safetensors=True,
+        custom_pipeline="lpw_stable_diffusion_xl",add_watermarker=False,
     )
+
+    tokenzier = BertModel.from_pretrained("bert-base-uncased", torch_dtype=torch.float16, attn_implementation="sdpa")
+
     pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
+
     if device == 'cuda':
         configure_gpu()
         pipe.enable_xformers_memory_efficient_attention()
@@ -39,7 +44,10 @@ def configure_pipeline(repo_url , device='cuda', clip_skip=2):
         print("The pipeline does not support clip_skip configuration.")
 
     pipe.to(device)
-    return pipe
+
+    print('Selected Model')
+
+    return (tokenzier , pipe)
 
 def reshape_lora_weights(lora_weights, expected_shape):
     reshaped_weights = {}

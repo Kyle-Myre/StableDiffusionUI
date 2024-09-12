@@ -21,18 +21,13 @@ def prepare_prompt(prompt: str, max_length: int = 77):
         truncated_prompt: The truncated prompt ready for tokenization.
     """
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-    
-    # Tokenize the input text
     tokens = tokenizer.tokenize(prompt)
-    
-    # If the token length exceeds the maximum, truncate it
+
     if len(tokens) > max_length:
         print(f"Prompt too long. Truncating from {len(tokens)} tokens to {max_length} tokens.")
         tokens = tokens[:max_length]
 
-    # Reconstruct the truncated prompt
     truncated_prompt = tokenizer.convert_tokens_to_string(tokens)
-    
     return truncated_prompt
 
 
@@ -63,6 +58,7 @@ def generate(
     height = int(height)
     filename = generate_filename_random_string()
     processed_prompt = prepare_prompt(prompt , max_length=77)
+
     with torch.no_grad():
         image = pipe(
             processed_prompt,

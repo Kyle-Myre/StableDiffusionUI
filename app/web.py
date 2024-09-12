@@ -1,8 +1,7 @@
 #-------------------------Imports----------------------------#
 try:
     from config.config    import (__VERSION__,FINAL_IMAGES_LIST,LORA_LIST,MODEL_LIST)
-    from workers.pipeline import set_up_pipeline
-    from workers.worker   import generate
+    from workers.pipeline import set_up_pipeline , generate
     import streamlit as st
 except ModuleNotFoundError as error:
     print(error)
@@ -16,9 +15,9 @@ def main():
 
     st.set_page_config(layout='wide' , page_title='Stable Diffuser UI')
 
-    FormSection , OuputSection = st.columns(2)
+    form_section , output_section = st.columns(2)
 
-    with FormSection:
+    with form_section:
         st.title(f'Stable Diffusion {__VERSION__}')
         st.markdown(
             """
@@ -32,17 +31,15 @@ def main():
             unsafe_allow_html=True
         )
         task_status = st.empty()
-        ModelTab , LoRaTab = st.tabs(["Models" , "LoRA's"])
-        with ModelTab:
+        model_tab , lora_tab = st.tabs(["Models" , "LoRA's"])
+        with model_tab:
             status       = st.empty()
             model_option = st.selectbox(
                 "Select Available Model",
                 MODEL_LIST
             )
-        with LoRaTab:
-            lora_combo = st.multiselect(
-                "Select Available Model Available LoRA" , LORA_LIST
-            )
+        with lora_tab:
+            lora_combo = st.multiselect("Select Available Model Available LoRA" , LORA_LIST)
         if model_option:
             with status.status("Preparing Model" , expanded=False):
                 pipe = cache_pipeline(model_option)
@@ -57,7 +54,7 @@ def main():
             width_prompt     = st.number_input('Width' , value=784.00)
             submit_button    = st.form_submit_button('Submit')
 
-    with OuputSection:
+    with output_section:
         st.subheader('Output')
         image = st.empty()
         image.image(FINAL_IMAGES_LIST[0] , caption=FINAL_IMAGES_LIST[-1])

@@ -13,6 +13,7 @@ def set_up_pipeline(repo_url, clip_skip=2, device="cuda"):
     torch.backends.cudnn.benchmark = True
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = True
+
     pipe = StableDiffusionXLPipeline.from_pretrained(
         repo_url,
         torch_dtype=torch.float16,
@@ -21,14 +22,10 @@ def set_up_pipeline(repo_url, clip_skip=2, device="cuda"):
         add_watermarker=False,
         device_map="balanced" if device == "cuda" else None
     )
-    if not hasattr(pipe, 'tokenizer'):
-        tokenizer = BertModel.from_pretrained(
-            "bert-base-uncased",
-            torch_dtype=torch.float16,
-            attn_implementation="sdpa"
-        )
+
     pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(pipe.scheduler.config)
     pipe.enable_xformers_memory_efficient_attention()
+
     if hasattr(pipe, 'config'):
         pipe.config.clip_skip = clip_skip
     else:

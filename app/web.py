@@ -66,12 +66,16 @@ def main():
         with generating_status.status("Generating Image"):
             try:
                 generate(
-                    pipe=pipe,image_component=image , 
-                    height=height_prompt,width=width_prompt,guidance_scale=gradience_prompt,
-                    negative=negative_prompt,prompt=positive_prompt,steps=steps_prompt,
+                    pipe=pipe , 
+                    image_component=image , 
+                    height=height_prompt,
+                    width=width_prompt,
+                    guidance_scale=gradience_prompt,
+                    negative=negative_prompt,
+                    prompt=positive_prompt,
+                    steps=steps_prompt,
                 )
                 task_status.success('Successfully Generated Task')
-
             except Exception as error:
                 task_status.error(error)
 

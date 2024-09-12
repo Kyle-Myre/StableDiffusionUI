@@ -20,6 +20,7 @@ def prepare_prompt(prompt: str, max_length: int = 77):
     Returns:
         truncated_prompt: The truncated prompt ready for tokenization.
     """
+
     tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
     tokens = tokenizer.tokenize(prompt)
 
@@ -57,6 +58,7 @@ def generate(
     width = int(width)
     height = int(height)
     filename = generate_filename_random_string()
+
     processed_prompt = prepare_prompt(prompt , max_length=77)
 
     with torch.no_grad():
@@ -68,7 +70,9 @@ def generate(
             guidance_scale=guidance_scale,
             num_inference_steps=steps
         ).images[0]
+
         image.save(filename)
+
     image_component.image(filename)
     del image
     torch.cuda.empty_cache()

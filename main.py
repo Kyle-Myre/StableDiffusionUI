@@ -1,9 +1,17 @@
 try:
     import streamlit as st
     import yaml
+    import sys
+    sys.dont_write_bytecode=True
+    from functions import Generator
+    from functions import Pipeline
 except (ImportError , ImportWarning) as error:
     print(error)
     exit(-1)
+
+@st.cache_data
+def diffuser(repo_url:str):
+    return Pipeline(repo_url=repo_url)
 
 st.set_page_config(page_title='Stable Diffusion UI' , page_icon='./public/favicon.ico' , layout='wide')
 class App(object):
@@ -20,9 +28,11 @@ class App(object):
 
     def __init__(self) -> None:
         with self.Container.form:
+
             self.set_title("Stable Diffusion UI")
             self.set_description()
             self.set_form()
+
         with self.Container.result:
             self.set_result()
         
@@ -38,17 +48,23 @@ class App(object):
 
     def set_form(self) -> None:
         self.status = st.empty()
+
         with st.form('main_form'):
-            self.set_models()
-            st.multiselect('LoRA', ['1' , '2' , '3'])
+            self.model            = self.set_models()
+            self.lora             = st.multiselect('LoRA', ['1' , '2' , '3'])
             self.positive_prompt  = st.text_area('Prompt', placeholder='1boy, astronaut, green trees, etc, ...')
             self.negative_prompt  = st.text_area('Negative', placeholder='explicit, bad quality, nsfw, etc, ...')
             self.steps_prompt     = st.slider('Steps', min_value=1, value=30 , max_value=100)
             self.gradience_prompt = st.slider('Gradience', min_value=1, value=8 ,  max_value=100)
             self.height_prompt    = st.number_input('Height' , value=1352.00)
             self.width_prompt     = st.number_input('Width' , value=784.00)
+
             self.submit_button    = st.form_submit_button('Submit')
 
+            pipeline = diffuser(self.model)
+
+            if self.submit_button:
+                print(pipeline.pipeline)
 
     def set_result(self) -> None:
         st.subheader("")

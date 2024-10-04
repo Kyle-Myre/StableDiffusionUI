@@ -1,6 +1,0 @@
-projectKey=Stable-Diffusion
-serverUrl=http://localhost:9000
-serverVersion=10.5.1.90531
-dashboardUrl=http://localhost:9000/dashboard?id=Stable-Diffusion
-ceTaskId=adb04229-a354-4678-8e68-cad97fe31caf
-ceTaskUrl=http://localhost:9000/api/ce/task?id=adb04229-a354-4678-8e68-cad97fe31caf

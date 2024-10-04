@@ -1,7 +1,11 @@
 [client]
-showErrorDetails = false
+showErrorDetails = true
 
 [theme]
-base="dark"
-primaryColor="#7dff00"
-font="monospace"
+primaryColor="#8aff4b"
+backgroundColor="#efefef"
+secondaryBackgroundColor="#f2f2f7"
+textColor="#000000"
+
+[runner]
+fastReruns = true

@@ -1,5 +1,2 @@
-app/output/*
-app/loRA/*
-__pycache__/
 .env
-.venv
+output

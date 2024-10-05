@@ -22,12 +22,6 @@ class App:
     class Container:
         form  , result = st.columns(2)
 
-    def set_models(self) -> None:
-        with open('config.json' , 'r') as config:
-            self.config:dict = json.load(config)
-
-        st.selectbox(label='Model' , options=self.config['models'])
-
     def __init__(self) -> None:
 
         self.result: str = ""
@@ -56,7 +50,11 @@ class App:
 
         with st.form('main_form'):
 
-            self.model            = self.set_models()
+            with open('config.json' , 'r') as config:
+                self.config:dict = json.load(config)
+
+            self.model            = st.selectbox(label='Model' , options=self.config['models'])
+
             self.lora             = st.multiselect('LoRA', ['1' , '2' , '3'])
             self.positive_prompt  = st.text_area('Prompt', placeholder='1boy, astronaut, green trees, etc, ...')
             self.negative_prompt  = st.text_area('Negative', placeholder='explicit, bad quality, nsfw, etc, ...')
@@ -68,7 +66,7 @@ class App:
             self.submit_button    = st.form_submit_button('Submit')
 
             try:
-                pipeline = diffuser('John6666/prefect-pony-xl-v1-sdxl')
+                pipeline = diffuser(self.model)
             except Exception as error:
                 print(f"[red]{error}[/]")
 

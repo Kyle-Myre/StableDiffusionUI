@@ -2,7 +2,7 @@ from diffusers    import EulerAncestralDiscreteScheduler
 from diffusers    import StableDiffusionXLPipeline
 from transformers import BertTokenizer , utils
 from rich         import print
-import torch , uuid
+import torch , uuid , os
 
 class Utils:
     def generate_filename(self):
@@ -42,14 +42,23 @@ class Pipeline:
 class Generator:
     def generate(self , diffuser:Pipeline , propmt:str , negative:str , dimensions:tuple , guidance:int , steps:int):
         torch.cuda.empty_cache()
+        
         result = diffuser.pipe(
-            prompt=propmt,
-            negative_prompt=negative,
-            width=dimensions[0],
-            heigth=dimensions[1],
-            guidance_scale=guidance,
-            num_inference_steps=steps,
-            num_images_per_prompt=1
+        prompt=propmt,
+        negative_prompt=negative,
+        width=dimensions[0],
+        heigth=dimensions[1],
+        guidance_scale=guidance,
+        num_inference_steps=steps,
+        num_images_per_prompt=1
         ).images[0]
-        result.save(Utils().generate_filename())
+        filename = os.path.join('output' , Utils().generate_filename())
+        try:
+            os.mkdir('output')
+        except Exception:
+            ...
+        finally:
+            result.save(filename)
+
         torch.cuda.empty_cache()
+        return filename

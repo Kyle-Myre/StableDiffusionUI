@@ -1,32 +1,37 @@
-try:
-    import streamlit as st
-    import yaml
-    import sys
-    sys.dont_write_bytecode=True
-    from functions import Generator
-    from functions import Pipeline
-except (ImportError , ImportWarning) as error:
-    print(error)
-    exit(-1)
+import streamlit as st
+import sys
+import json
+sys.dont_write_bytecode=True
+from functions import Generator
+from functions import Pipeline
 
 @st.cache_data
 def diffuser(repo_url:str):
     return Pipeline(repo_url=repo_url)
 
 st.set_page_config(page_title='Stable Diffusion UI' , page_icon='./public/favicon.ico' , layout='wide')
-class App(object):
+
+
+class App:
     """
     - Stable Diffusion UI App main class.
     """
+
+    result:str
+
     class Container:
         form  , result = st.columns(2)
 
     def set_models(self) -> None:
-        with open('config.yaml' , 'r') as config:
-            self.config:dict = yaml.safe_load(config)
+        with open('config.json' , 'r') as config:
+            self.config:dict = json.load(config)
+
         st.selectbox(label='Model' , options=self.config['models'])
 
     def __init__(self) -> None:
+
+        self.result: str = ""
+
         with self.Container.form:
 
             self.set_title("Stable Diffusion UI")
@@ -50,6 +55,7 @@ class App(object):
         self.status = st.empty()
 
         with st.form('main_form'):
+
             self.model            = self.set_models()
             self.lora             = st.multiselect('LoRA', ['1' , '2' , '3'])
             self.positive_prompt  = st.text_area('Prompt', placeholder='1boy, astronaut, green trees, etc, ...')
@@ -61,14 +67,29 @@ class App(object):
 
             self.submit_button    = st.form_submit_button('Submit')
 
-            pipeline = diffuser(self.model)
+            try:
+                pipeline = diffuser('John6666/prefect-pony-xl-v1-sdxl')
+            except Exception as error:
+                print(f"[red]{error}[/]")
 
             if self.submit_button:
-                print(pipeline.pipeline)
+                pipeline.pipeline()
+
+                self.result = Generator().generate(
+                    pipeline , 
+                    self.positive_prompt , 
+                    self.negative_prompt , 
+                    (self.width_prompt , self.height_prompt),
+                    self.gradience_prompt,
+                    self.steps_prompt
+                )
 
     def set_result(self) -> None:
         st.subheader("")
-        st.image('./output/f7386c16-c881-4570-bfc9-a54f945c13c6.jpeg' , width=600)
+        try:
+            st.image(self.result , width=600)
+        except Exception:
+            st.empty()
 
 
 

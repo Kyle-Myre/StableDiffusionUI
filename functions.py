@@ -22,7 +22,7 @@ class Pipeline:
     repo_url:str
     pipe:StableDiffusionXLPipeline
     def __init__(self , repo_url:str) -> None:
-        utils.move_cache()
+        # utils.move_cache()
         torch.backends.cudnn.benchmark        = True
         torch.backends.cuda.matmul.allow_tf32 = True
         torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction = True

@@ -65,10 +65,8 @@ class App:
 
             self.submit_button    = st.form_submit_button('Submit')
 
-            try:
-                pipeline = diffuser(self.model)
-            except Exception as error:
-                print(f"[red]{error}[/]")
+
+            pipeline = diffuser(self.model)
 
             if self.submit_button:
                 pipeline.pipeline()
